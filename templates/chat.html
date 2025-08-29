@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Room</title>
+    <script>
+        function fetchMessages() {
+            fetch("/get_messages")
+                .then(response => response.json())
+                .then(data => {
+                    let chatBox = document.getElementById("chat-box");
+                    chatBox.innerHTML = "";
+                    data.forEach(msg => {
+                        chatBox.innerHTML += `<p><b>[${msg.time}] ${msg.user}:</b> ${msg.text}</p>`;
+                    });
+                });
+        }
+
+        function sendMessage() {
+            let msg = document.getElementById("message").value;
+            if (msg.trim() === "") return;
+            fetch("/send", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "message=" + encodeURIComponent(msg)
+            }).then(() => {
+                document.getElementById("message").value = "";
+                fetchMessages();
+            });
+        }
+
+        setInterval(fetchMessages, 2000); // Refresh every 2s
+        window.onload = fetchMessages;
+    </script>
+</head>
+<body>
+    <h2>Welcome, {{ username }}!</h2>
+    <div id="chat-box" style="border:1px solid black; height:300px; overflow-y:scroll;"></div>
+    <br>
+    <input type="text" id="message" placeholder="Type message...">
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
