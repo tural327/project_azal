@@ -13,7 +13,7 @@ import numpy as np
 
 
 def how_many_days(df2):
-  df2[df2['status'] == 'Closed']
+  df2 = df2[df2['status'] == 'Closed']
   ca_pa_closed = []
   closed_days = []
   my_ca_pa = []
@@ -703,3 +703,4 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
